@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "topaz Vision AI 画像認識デモ",
+  title: "Vision AI 画像認識デモ",
   description: "Google Cloud Vision APIを使用した画像認識アプリケーション",
 };
 

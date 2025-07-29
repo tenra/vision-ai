@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { VisionLabel, VisionResult } from "../lib/vision-api";
+import { VisionLabel, VisionResult, VisionObject } from "../lib/vision-api";
+import ImageWithOverlay from "./ImageWithOverlay";
 
 interface ImageUploaderProps {
   onAnalysisComplete: (result: VisionResult) => void;
@@ -13,6 +14,9 @@ export default function ImageUploader({
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<VisionResult | null>(
+    null
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // クライアントサイドでのみ実行
@@ -53,14 +57,19 @@ export default function ImageUploader({
       }
 
       const result: VisionResult = await response.json();
+      setAnalysisResult(result);
       onAnalysisComplete(result);
     } catch (error) {
       console.error("Error analyzing image:", error);
-      onAnalysisComplete({
+      const errorResult = {
         labels: [],
+        objects: [],
+        texts: [],
         error:
           error instanceof Error ? error.message : "Unknown error occurred",
-      });
+      };
+      setAnalysisResult(errorResult);
+      onAnalysisComplete(errorResult);
     } finally {
       setIsUploading(false);
     }
@@ -92,7 +101,7 @@ export default function ImageUploader({
   if (!isClient) {
     return (
       <div className="w-full max-w-md mx-auto">
-        <div className="border-2 border-dashed rounded-lg p-8 text-center transition-colors border-gray-300">
+        <div className="border-2 border-dashed rounded-lg p-2 text-center transition-colors border-gray-300">
           <div className="space-y-4">
             <div className="text-6xl text-gray-400">📷</div>
             <div>
@@ -156,11 +165,19 @@ export default function ImageUploader({
           </div>
         ) : (
           <div className="space-y-4">
-            <img
-              src={previewUrl}
-              alt="Preview"
-              className="max-w-full h-auto rounded"
-            />
+            {analysisResult && analysisResult.objects.length > 0 ? (
+              <ImageWithOverlay
+                imageUrl={previewUrl}
+                objects={analysisResult.objects}
+                className="max-w-full h-auto rounded"
+              />
+            ) : (
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="max-w-full h-auto rounded"
+              />
+            )}
             {isUploading && (
               <div className="flex items-center justify-center space-x-2">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
