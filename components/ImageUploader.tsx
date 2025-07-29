@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { VisionLabel, VisionResult } from "../lib/vision-api";
 
 interface ImageUploaderProps {
@@ -12,7 +12,13 @@ export default function ImageUploader({
 }: ImageUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // クライアントサイドでのみ実行
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleFileSelect = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -70,7 +76,9 @@ export default function ImageUploader({
         dataTransfer.items.add(file);
         if (fileInputRef.current) {
           fileInputRef.current.files = dataTransfer.files;
-          handleFileSelect({ target: { files: dataTransfer.files } } as any);
+          handleFileSelect({
+            target: { files: dataTransfer.files },
+          } as React.ChangeEvent<HTMLInputElement>);
         }
       }
     }
@@ -79,6 +87,33 @@ export default function ImageUploader({
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   };
+
+  // サーバーサイドレンダリング時は何も表示しない
+  if (!isClient) {
+    return (
+      <div className="w-full max-w-md mx-auto">
+        <div className="border-2 border-dashed rounded-lg p-8 text-center transition-colors border-gray-300">
+          <div className="space-y-4">
+            <div className="text-6xl text-gray-400">📷</div>
+            <div>
+              <p className="text-lg font-medium text-gray-700">
+                画像をアップロード
+              </p>
+              <p className="text-sm text-gray-500 mt-1">
+                クリックまたはドラッグ&ドロップで画像を選択
+              </p>
+            </div>
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              disabled
+            >
+              画像を選択
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-md mx-auto">
