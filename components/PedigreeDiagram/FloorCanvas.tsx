@@ -18,6 +18,21 @@ export default function FloorCanvas() {
     setFloors(floorArray);
   };
 
+  // 折り返し表示のための計算
+  const stageHeight = 600;
+  const panelHeight = 80; // パネル高さ + マージン
+  const maxPanelsPerColumn = Math.floor(stageHeight / panelHeight);
+  const columns = Math.ceil(floors.length / maxPanelsPerColumn);
+
+  // 各フロアの位置を計算
+  const getFloorPosition = (index: number) => {
+    const column = Math.floor(index / maxPanelsPerColumn);
+    const row = index % maxPanelsPerColumn;
+    const x = 100 + column * 200; // 列間の間隔
+    const y = 50 + row * panelHeight;
+    return { x, y };
+  };
+
   return (
     <div>
       {/* フォーム */}
@@ -74,35 +89,32 @@ export default function FloorCanvas() {
 
           {/* 階層パネル用のLayer */}
           <Layer>
-            {floors.map((floor, index) => (
-              <FloorPanel
-                key={floor}
-                x={100}
-                y={50 + index * 80}
-                width={120}
-                height={60}
-                floorNumber={floor}
-              />
-            ))}
-
-            {/* 接続線（階層間の縦線） */}
-            {floors.length > 1 &&
-              floors.map((floor, index) => {
-                if (index < floors.length - 1) {
-                  return (
-                    <Line
-                      key={`connector-${floor}`}
-                      points={[160, 110 + index * 80, 160, 130 + index * 80]}
-                      stroke="#000000"
-                      strokeWidth={2}
-                    />
-                  );
-                }
-                return null;
-              })}
+            {floors.map((floor, index) => {
+              const position = getFloorPosition(index);
+              return (
+                <FloorPanel
+                  key={floor}
+                  x={position.x}
+                  y={position.y}
+                  width={120}
+                  height={60}
+                  floorNumber={floor}
+                />
+              );
+            })}
           </Layer>
         </Stage>
       </div>
+
+      {/* 表示情報 */}
+      {floors.length > 0 && (
+        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+          <p className="text-sm text-blue-700">
+            {floorCount}階から2階までの{floors.length}個の階層を表示中
+            {columns > 1 && ` (${columns}列に分けて表示)`}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
