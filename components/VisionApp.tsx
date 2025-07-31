@@ -18,8 +18,21 @@ export default function VisionApp({
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Vision AI 画像認識デモ
+            Google Vision AI 画像認識デモ
           </h1>
+
+          <a
+            href="https://cloud.google.com/vision?hl=ja"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-600"
+          >
+            https://cloud.google.com/vision?hl=ja
+          </a>
+
+          <p className="text-gray-600">
+            ※オブジェクト・画像等の検出精度を上げるには別途AIにトレーニングが必要です。
+          </p>
         </div>
 
         {/* メインコンテンツ */}
