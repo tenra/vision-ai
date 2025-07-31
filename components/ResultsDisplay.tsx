@@ -18,7 +18,7 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
 
   if (result.error) {
     return (
-      <div className="w-full max-w-md mx-auto mt-6">
+      <div className="w-full mx-auto mt-6">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <div className="flex items-center">
             <div className="text-red-500 text-xl mr-2">⚠️</div>
@@ -38,7 +38,7 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
 
   if (!hasLabels && !hasObjects && !hasTexts) {
     return (
-      <div className="w-full max-w-md mx-auto mt-6">
+      <div className="w-full mx-auto mt-6">
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <div className="flex items-center">
             <div className="text-yellow-500 text-xl mr-2">🔍</div>
@@ -55,7 +55,7 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto mt-6 space-y-6">
+    <div className="w-full mx-auto mt-6 space-y-6">
       {/* オブジェクト検出結果 */}
       {hasObjects && (
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm">

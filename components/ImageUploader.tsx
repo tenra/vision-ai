@@ -102,12 +102,12 @@ export default function ImageUploader({
     event.preventDefault();
   };
 
-  console.log("analysisResult",analysisResult);
+  console.log("analysisResult", analysisResult);
 
   // サーバーサイドレンダリング時は何も表示しない
   if (!isClient) {
     return (
-      <div className="w-full max-w-md mx-auto">
+      <div className="w-full mx-auto">
         <div className="border-2 border-dashed rounded-lg p-2 text-center transition-colors border-gray-300">
           <div className="space-y-4">
             <div className="text-6xl text-gray-400">📷</div>
@@ -132,7 +132,7 @@ export default function ImageUploader({
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full mx-auto">
       <div
         className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
           isUploading

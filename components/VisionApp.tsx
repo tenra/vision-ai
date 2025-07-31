@@ -16,7 +16,7 @@ export default function VisionApp() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Vision AI 画像認識デモ
@@ -29,7 +29,7 @@ export default function VisionApp() {
         </div>
 
         {/* メインコンテンツ */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* 左側: 画像アップロード */}
           <div>
             <div className="bg-white rounded-lg shadow-sm p-6">
