@@ -1,31 +1,25 @@
 "use client";
 
-import { useState } from "react";
 import { VisionResult } from "../lib/vision-api";
 import ImageUploader from "./ImageUploader";
 import ResultsDisplay from "./ResultsDisplay";
 
-export default function VisionApp() {
-  const [analysisResult, setAnalysisResult] = useState<VisionResult | null>(
-    null
-  );
+interface VisionAppProps {
+  analysisResult: VisionResult | null;
+  onAnalysisComplete: (result: VisionResult) => void;
+}
 
-  const handleAnalysisComplete = (result: VisionResult) => {
-    setAnalysisResult(result);
-  };
-
+export default function VisionApp({
+  analysisResult,
+  onAnalysisComplete,
+}: VisionAppProps) {
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="mx-auto px-4">
+    <div className="py-12">
+      <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Vision AI 画像認識デモ
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Google Cloud Vision AI APIを使用して画像をアップロードし、
-            認識された結果を表示します。画像をドラッグ&ドロップまたは
-            クリックして選択してください。
-          </p>
         </div>
 
         {/* メインコンテンツ */}
@@ -36,7 +30,7 @@ export default function VisionApp() {
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
                 画像をアップロード
               </h2>
-              <ImageUploader onAnalysisComplete={handleAnalysisComplete} />
+              <ImageUploader onAnalysisComplete={onAnalysisComplete} />
             </div>
           </div>
 

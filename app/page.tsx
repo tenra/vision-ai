@@ -1,5 +1,5 @@
-import VisionApp from "../components/VisionApp";
+import TabbedApp from "../components/TabbedApp";
 
 export default function Home() {
-  return <VisionApp />;
+  return <TabbedApp />;
 }
