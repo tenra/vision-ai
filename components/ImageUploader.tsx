@@ -1,7 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { VisionLabel, VisionResult, VisionObject } from "../lib/vision-api";
+import {
+  VisionLabel,
+  VisionResult,
+  VisionObject,
+  VisionText,
+} from "../lib/vision-api";
 import ImageWithOverlay from "./ImageWithOverlay";
 
 interface ImageUploaderProps {
@@ -97,6 +102,8 @@ export default function ImageUploader({
     event.preventDefault();
   };
 
+  console.log("analysisResult",analysisResult);
+
   // サーバーサイドレンダリング時は何も表示しない
   if (!isClient) {
     return (
@@ -165,10 +172,13 @@ export default function ImageUploader({
           </div>
         ) : (
           <div className="space-y-4">
-            {analysisResult && analysisResult.objects.length > 0 ? (
+            {analysisResult &&
+            (analysisResult.objects.length > 0 ||
+              analysisResult.texts.length > 0) ? (
               <ImageWithOverlay
                 imageUrl={previewUrl}
                 objects={analysisResult.objects}
+                texts={analysisResult.texts}
                 className="max-w-full h-auto rounded"
               />
             ) : (
