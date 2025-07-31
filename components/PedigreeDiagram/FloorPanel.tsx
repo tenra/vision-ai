@@ -1,6 +1,7 @@
 "use client";
 
 import { Group, Rect, Text } from "react-konva";
+import Konva from "konva";
 
 interface FloorPanelProps {
   x: number;
@@ -8,6 +9,10 @@ interface FloorPanelProps {
   width: number;
   height: number;
   floorNumber: number;
+  draggable?: boolean;
+  onDragEnd?: (e: Konva.KonvaEventObject<DragEvent>) => void;
+  onTransformEnd?: (e: Konva.KonvaEventObject<Event>) => void;
+  onClick?: () => void;
 }
 
 export default function FloorPanel({
@@ -16,13 +21,25 @@ export default function FloorPanel({
   width,
   height,
   floorNumber,
+  draggable = false,
+  onDragEnd,
+  onTransformEnd,
+  onClick,
 }: FloorPanelProps) {
   return (
-    <Group>
+    <Group
+      id={`floor-${floorNumber}`}
+      x={x}
+      y={y}
+      draggable={draggable}
+      onDragEnd={onDragEnd}
+      onTransformEnd={onTransformEnd}
+      onClick={onClick}
+    >
       {/* 黒い矩形枠 */}
       <Rect
-        x={x}
-        y={y}
+        x={0}
+        y={0}
         width={width}
         height={height}
         stroke="#000000"
@@ -32,8 +49,8 @@ export default function FloorPanel({
 
       {/* 階数ラベル */}
       <Text
-        x={x}
-        y={y - 25}
+        x={0}
+        y={-25}
         width={width}
         text={`${floorNumber}01号室`}
         fontSize={14}

@@ -2,10 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import {
-  VisionLabel,
+  //VisionLabel,
   VisionResult,
-  VisionObject,
-  VisionText,
+  //VisionObject,
+  //VisionText,
 } from "../lib/vision-api";
 import ImageWithOverlay from "./ImageWithOverlay";
 
