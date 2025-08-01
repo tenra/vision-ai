@@ -32,7 +32,7 @@ export default function PedigreeDiagram() {
         {/* メインコンテンツ */}
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            階層図作成
+            基本設定
           </h2>
           {mounted && <FloorCanvas />}
         </div>

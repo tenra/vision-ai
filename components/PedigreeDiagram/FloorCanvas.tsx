@@ -57,17 +57,36 @@ export default function FloorCanvas() {
     const maxPanelsPerColumn = Math.floor(stageHeight / panelHeight);
 
     const newFloors: FloorData[] = floorArray.map((floor, index) => {
-      const column = Math.floor(index / maxPanelsPerColumn);
-      const row = index % maxPanelsPerColumn;
-      const x = 100 + column * 200;
-      const y = 50 + row * panelHeight;
+      // 最初のフロア（最高階数）のみ大きいサイズ
+      const isFirstFloor = index === 0;
+      const panelWidth = isFirstFloor ? 240 : 120;
+      const panelHeightValue = isFirstFloor ? 120 : 60;
+
+      let x, y;
+
+      if (isFirstFloor) {
+        // 最初のフロアは左に配置
+        x = 50;
+        y = 50;
+      } else {
+        // その他のフロアは右に配置
+        const remainingFloors = floorArray.length - 1; // 最初のフロアを除く
+        const rightColumnFloors = Math.ceil(remainingFloors / 2); // 右列のフロア数
+
+        const rightIndex = index - 1; // 最初のフロアを除いたインデックス
+        const column = Math.floor(rightIndex / rightColumnFloors);
+        const row = rightIndex % rightColumnFloors;
+
+        x = 350 + column * 150; // 右側の開始位置
+        y = 50 + row * 80;
+      }
 
       return {
         id: `floor-${floor}`,
         x,
         y,
-        width: 120,
-        height: 60,
+        width: panelWidth,
+        height: panelHeightValue,
         floorNumber: floor,
         hasSplitter: hasSplitter,
         hasBooster: hasBooster,
