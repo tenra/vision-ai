@@ -9,6 +9,7 @@ interface FloorPanelProps {
   width: number;
   height: number;
   floorNumber: number;
+  hasSplitter?: boolean;
   draggable?: boolean;
   onDragEnd?: (e: Konva.KonvaEventObject<DragEvent>) => void;
   onTransformEnd?: (e: Konva.KonvaEventObject<Event>) => void;
@@ -21,6 +22,7 @@ export default function FloorPanel({
   width,
   height,
   floorNumber,
+  hasSplitter = false,
   draggable = false,
   onDragEnd,
   onTransformEnd,
@@ -59,6 +61,20 @@ export default function FloorPanel({
         align="center"
         fontWeight="bold"
       />
+
+      {/* 2分配器表示 */}
+      {hasSplitter && (
+        <Text
+          x={width / 2 - 8}
+          y={height / 2 - 8}
+          text="②"
+          fontSize={16}
+          fontFamily="Arial"
+          fill="#0066cc"
+          align="center"
+          fontWeight="bold"
+        />
+      )}
     </Group>
   );
 }

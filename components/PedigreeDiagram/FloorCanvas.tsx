@@ -12,10 +12,12 @@ interface FloorData {
   width: number;
   height: number;
   floorNumber: number;
+  hasSplitter: boolean;
 }
 
 export default function FloorCanvas() {
   const [floorCount, setFloorCount] = useState<number>(10);
+  const [hasSplitter, setHasSplitter] = useState<boolean>(true);
   const [floors, setFloors] = useState<FloorData[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
@@ -57,6 +59,7 @@ export default function FloorCanvas() {
         width: 120,
         height: 60,
         floorNumber: floor,
+        hasSplitter: hasSplitter,
       };
     });
 
@@ -120,28 +123,46 @@ export default function FloorCanvas() {
     <div>
       {/* フォーム */}
       <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-        <form onSubmit={handleFloorSubmit} className="flex items-center gap-4">
-          <label
-            htmlFor="floorCount"
-            className="text-sm font-medium text-gray-700"
-          >
-            建物の階数:
-          </label>
-          <input
-            id="floorCount"
-            type="number"
-            min="2"
-            max="50"
-            value={floorCount}
-            onChange={(e) => setFloorCount(Number(e.target.value))}
-            className="px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            作成する
-          </button>
+        <form onSubmit={handleFloorSubmit} className="space-y-4">
+          <div className="flex items-center gap-4">
+            <label
+              htmlFor="floorCount"
+              className="text-sm font-medium text-gray-700"
+            >
+              建物の階数:
+            </label>
+            <input
+              id="floorCount"
+              type="number"
+              min="2"
+              max="50"
+              value={floorCount}
+              onChange={(e) => setFloorCount(Number(e.target.value))}
+              className="px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              作成する
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              id="hasSplitter"
+              type="checkbox"
+              checked={hasSplitter}
+              onChange={(e) => setHasSplitter(e.target.checked)}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              htmlFor="hasSplitter"
+              className="text-sm font-medium text-gray-700"
+            >
+              2分配器
+            </label>
+          </div>
         </form>
       </div>
 
@@ -185,6 +206,7 @@ export default function FloorCanvas() {
                 width={floor.width}
                 height={floor.height}
                 floorNumber={floor.floorNumber}
+                hasSplitter={floor.hasSplitter}
                 draggable={true}
                 onDragEnd={(e) => handleDragEnd(e, floor.id)}
                 onTransformEnd={(e) => handleTransformEnd(e, floor.id)}
