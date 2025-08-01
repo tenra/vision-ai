@@ -15,6 +15,12 @@ interface FloorData {
   hasSplitter: boolean;
 }
 
+interface Connection {
+  from: FloorData;
+  to: FloorData;
+  path: Array<{ x: number; y: number }>;
+}
+
 export default function FloorCanvas() {
   const [floorCount, setFloorCount] = useState<number>(10);
   const [hasSplitter, setHasSplitter] = useState<boolean>(true);
@@ -119,22 +125,50 @@ export default function FloorCanvas() {
     }
   };
 
-  // hasSplitterがtrueのフロアを抽出して接続線を生成
-  const getSplitterConnections = () => {
-    const splitterFloors = floors.filter((floor) => floor.hasSplitter);
-    const connections: Array<{ from: FloorData; to: FloorData }> = [];
+  // 縦横のみの経路を生成
+  const generateOrthogonalPath = (
+    from: FloorData,
+    to: FloorData
+  ): Array<{ x: number; y: number }> => {
+    const fromCenterX = from.x + from.width / 2;
+    const fromCenterY = from.y + from.height / 2;
+    const toCenterX = to.x + to.width / 2;
+    const toCenterY = to.y + to.height / 2;
+    const path: Array<{ x: number; y: number }> = [];
+    // 開始点
+    path.push({ x: fromCenterX, y: fromCenterY });
+    // 中間点（縦横移動）
+    const midX = fromCenterX;
+    const midY = toCenterY;
+    // 縦移動
+    if (Math.abs(fromCenterY - toCenterY) > 5) {
+      path.push({ x: midX, y: midY });
+    }
+    // 横移動
+    if (Math.abs(fromCenterX - toCenterX) > 5) {
+      path.push({ x: toCenterX, y: midY });
+    }
+    // 終了点
+    path.push({ x: toCenterX, y: toCenterY });
+    return path;
+  };
 
+  // hasSplitterがtrueのフロアを抽出して接続線を生成
+  const getSplitterConnections = (): Connection[] => {
+    const splitterFloors = floors.filter((floor) => floor.hasSplitter);
+    const connections: Connection[] = [];
     // 階数順にソート（降順）
     splitterFloors.sort((a, b) => b.floorNumber - a.floorNumber);
-
     // 連番で接続
     for (let i = 0; i < splitterFloors.length - 1; i++) {
+      const from = splitterFloors[i];
+      const to = splitterFloors[i + 1];
       connections.push({
-        from: splitterFloors[i],
-        to: splitterFloors[i + 1],
+        from,
+        to,
+        path: generateOrthogonalPath(from, to),
       });
     }
-
     return connections;
   };
 
@@ -218,21 +252,18 @@ export default function FloorCanvas() {
           {/* 接続線用のLayer */}
           <Layer>
             {getSplitterConnections().map((connection, index) => {
-              const fromCenterX = connection.from.x + connection.from.width / 2;
-              const fromCenterY =
-                connection.from.y + connection.from.height / 2;
-              const toCenterX = connection.to.x + connection.to.width / 2;
-              const toCenterY = connection.to.y + connection.to.height / 2;
-
-              return (
-                <Line
-                  key={`connection-${connection.from.id}-${connection.to.id}`}
-                  points={[fromCenterX, fromCenterY, toCenterX, toCenterY]}
-                  stroke="#0066cc"
-                  strokeWidth={1}
-                  //dash={[5, 5]}
-                />
-              );
+              // 経路の各セグメントを描画
+              return connection.path.slice(1).map((point, segmentIndex) => {
+                const prevPoint = connection.path[segmentIndex];
+                return (
+                  <Line
+                    key={`connection-${connection.from.id}-${connection.to.id}-${segmentIndex}`}
+                    points={[prevPoint.x, prevPoint.y, point.x, point.y]}
+                    stroke="#0066cc"
+                    strokeWidth={1}
+                  />
+                );
+              });
             })}
           </Layer>
 
