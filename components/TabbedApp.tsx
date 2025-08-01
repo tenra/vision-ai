@@ -4,8 +4,9 @@ import { useState } from "react";
 import { VisionResult } from "../lib/vision-api";
 import VisionApp from "./VisionApp";
 import PedigreeDiagram from "./PedigreeDiagram";
+import MapsStatic from "./MapsStatic";
 
-type TabType = "vision" | "pedigree";
+type TabType = "vision" | "pedigree" | "maps";
 
 export default function TabbedApp() {
   const [activeTab, setActiveTab] = useState<TabType>("vision");
@@ -20,7 +21,7 @@ export default function TabbedApp() {
     <div className="min-h-screen bg-gray-50">
       {/* タブナビゲーション */}
       <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-6xl mx-auto px-4">
           <div className="flex space-x-8">
             <button
               onClick={() => setActiveTab("vision")}
@@ -42,6 +43,16 @@ export default function TabbedApp() {
             >
               系統図作成デモ
             </button>
+            <button
+              onClick={() => setActiveTab("maps")}
+              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === "maps"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              }`}
+            >
+              静的マップ作成デモ
+            </button>
           </div>
         </div>
       </div>
@@ -55,6 +66,7 @@ export default function TabbedApp() {
           />
         )}
         {activeTab === "pedigree" && <PedigreeDiagram />}
+        {activeTab === "maps" && <MapsStatic />}
       </div>
     </div>
   );
