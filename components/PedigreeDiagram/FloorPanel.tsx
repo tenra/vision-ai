@@ -1,6 +1,6 @@
 "use client";
 
-import { Group, Rect, Text, Path } from "react-konva";
+import { Group, Rect, Text, Path, Circle } from "react-konva";
 import Konva from "konva";
 
 interface FloorPanelProps {
@@ -15,6 +15,12 @@ interface FloorPanelProps {
   onDragEnd?: (e: Konva.KonvaEventObject<DragEvent>) => void;
   onTransformEnd?: (e: Konva.KonvaEventObject<Event>) => void;
   onClick?: () => void;
+  onSplitterClick?: () => void;
+  onBoosterClick?: () => void;
+  onSplitterDelete?: () => void;
+  onBoosterDelete?: () => void;
+  selectedSplitter?: boolean;
+  selectedBooster?: boolean;
 }
 
 export default function FloorPanel({
@@ -29,6 +35,12 @@ export default function FloorPanel({
   onDragEnd,
   onTransformEnd,
   onClick,
+  onSplitterClick,
+  onBoosterClick,
+  onSplitterDelete,
+  onBoosterDelete,
+  selectedSplitter = false,
+  selectedBooster = false,
 }: FloorPanelProps) {
   return (
     <Group
@@ -66,28 +78,90 @@ export default function FloorPanel({
 
       {/* 片方向ブースター（下向き三角形） */}
       {hasBooster && (
-        <Path
-          data="M 0 8 L -6 -8 L 6 -8 Z"
-          x={width / 2}
-          y={height / 2 - 15}
-          //fill="#0066cc"
-          stroke="#0066cc"
-          strokeWidth={1}
-        />
+        <Group>
+          <Path
+            data="M 0 8 L -6 -8 L 6 -8 Z"
+            x={width / 2}
+            y={height / 2 - 15}
+            //fill="#0066cc"
+            stroke="#0066cc"
+            strokeWidth={1}
+            onClick={onBoosterClick}
+            onTap={onBoosterClick}
+          />
+          {selectedBooster && (
+            <Group>
+              {/* バツボタンの背景 */}
+              <Circle
+                x={width / 2 + 15}
+                y={height / 2 - 30}
+                radius={8}
+                fill="#f0f0f0"
+                stroke="#cccccc"
+                strokeWidth={1}
+                onClick={onBoosterDelete}
+                onTap={onBoosterDelete}
+              />
+              {/* バツボタンのテキスト */}
+              <Text
+                x={width / 2 + 7}
+                y={height / 2 - 34}
+                text="×"
+                fontSize={12}
+                fontFamily="Arial"
+                fill="#000000"
+                align="center"
+                onClick={onBoosterDelete}
+                onTap={onBoosterDelete}
+              />
+            </Group>
+          )}
+        </Group>
       )}
 
       {/* 2分配器表示 */}
       {hasSplitter && (
-        <Text
-          x={width / 2 - 8}
-          y={height / 2 + 5}
-          text="②"
-          fontSize={16}
-          fontFamily="Arial"
-          fill="#0066cc"
-          align="center"
-          fontWeight="bold"
-        />
+        <Group>
+          <Text
+            x={width / 2 - 8}
+            y={height / 2 + 5}
+            text="②"
+            fontSize={16}
+            fontFamily="Arial"
+            fill="#0066cc"
+            align="center"
+            fontWeight="bold"
+            onClick={onSplitterClick}
+            onTap={onSplitterClick}
+          />
+          {selectedSplitter && (
+            <Group>
+              {/* バツボタンの背景 */}
+              <Circle
+                x={width / 2 + 15}
+                y={height / 2 - 5}
+                radius={8}
+                fill="#f0f0f0"
+                stroke="#cccccc"
+                strokeWidth={1}
+                onClick={onSplitterDelete}
+                onTap={onSplitterDelete}
+              />
+              {/* バツボタンのテキスト */}
+              <Text
+                x={width / 2 + 7}
+                y={height / 2 - 9}
+                text="×"
+                fontSize={12}
+                fontFamily="Arial"
+                fill="#000000"
+                align="center"
+                onClick={onSplitterDelete}
+                onTap={onSplitterDelete}
+              />
+            </Group>
+          )}
+        </Group>
       )}
     </Group>
   );

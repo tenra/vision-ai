@@ -14,6 +14,8 @@ interface FloorData {
   floorNumber: number;
   hasSplitter: boolean;
   hasBooster: boolean;
+  selectedSplitter?: boolean;
+  selectedBooster?: boolean;
 }
 
 interface Connection {
@@ -69,6 +71,8 @@ export default function FloorCanvas() {
         floorNumber: floor,
         hasSplitter: hasSplitter,
         hasBooster: hasBooster,
+        selectedSplitter: false,
+        selectedBooster: false,
       };
     });
 
@@ -118,6 +122,74 @@ export default function FloorCanvas() {
     setSelectedId(id);
   };
 
+  // 2分配器クリック処理
+  const handleSplitterClick = (id: string) => {
+    const newFloors = floors.map((floor) => {
+      if (floor.id === id) {
+        return {
+          ...floor,
+          selectedSplitter: !floor.selectedSplitter,
+          selectedBooster: false, // 他の選択をクリア
+        };
+      }
+      return {
+        ...floor,
+        selectedSplitter: false,
+        selectedBooster: false,
+      };
+    });
+    setFloors(newFloors);
+  };
+
+  // 片方向ブースタークリック処理
+  const handleBoosterClick = (id: string) => {
+    const newFloors = floors.map((floor) => {
+      if (floor.id === id) {
+        return {
+          ...floor,
+          selectedBooster: !floor.selectedBooster,
+          selectedSplitter: false, // 他の選択をクリア
+        };
+      }
+      return {
+        ...floor,
+        selectedSplitter: false,
+        selectedBooster: false,
+      };
+    });
+    setFloors(newFloors);
+  };
+
+  // 2分配器削除処理
+  const handleSplitterDelete = (id: string) => {
+    const newFloors = floors.map((floor) => {
+      if (floor.id === id) {
+        return {
+          ...floor,
+          hasSplitter: false,
+          selectedSplitter: false,
+        };
+      }
+      return floor;
+    });
+    setFloors(newFloors);
+  };
+
+  // 片方向ブースター削除処理
+  const handleBoosterDelete = (id: string) => {
+    const newFloors = floors.map((floor) => {
+      if (floor.id === id) {
+        return {
+          ...floor,
+          hasBooster: false,
+          selectedBooster: false,
+        };
+      }
+      return floor;
+    });
+    setFloors(newFloors);
+  };
+
   // Transformerの更新
   const checkDeselect = (
     e: Konva.KonvaEventObject<MouseEvent | TouchEvent>
@@ -125,6 +197,13 @@ export default function FloorCanvas() {
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
       setSelectedId(null);
+      // 選択状態をクリア
+      const newFloors = floors.map((floor) => ({
+        ...floor,
+        selectedSplitter: false,
+        selectedBooster: false,
+      }));
+      setFloors(newFloors);
     }
   };
 
@@ -303,10 +382,16 @@ export default function FloorCanvas() {
                 floorNumber={floor.floorNumber}
                 hasSplitter={floor.hasSplitter}
                 hasBooster={floor.hasBooster}
+                selectedSplitter={floor.selectedSplitter}
+                selectedBooster={floor.selectedBooster}
                 draggable={true}
                 onDragEnd={(e) => handleDragEnd(e, floor.id)}
                 onTransformEnd={(e) => handleTransformEnd(e, floor.id)}
                 onClick={() => handlePanelClick(floor.id)}
+                onSplitterClick={() => handleSplitterClick(floor.id)}
+                onBoosterClick={() => handleBoosterClick(floor.id)}
+                onSplitterDelete={() => handleSplitterDelete(floor.id)}
+                onBoosterDelete={() => handleBoosterDelete(floor.id)}
               />
             ))}
 
