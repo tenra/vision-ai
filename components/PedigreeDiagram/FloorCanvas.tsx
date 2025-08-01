@@ -119,6 +119,25 @@ export default function FloorCanvas() {
     }
   };
 
+  // hasSplitterがtrueのフロアを抽出して接続線を生成
+  const getSplitterConnections = () => {
+    const splitterFloors = floors.filter((floor) => floor.hasSplitter);
+    const connections: Array<{ from: FloorData; to: FloorData }> = [];
+
+    // 階数順にソート（降順）
+    splitterFloors.sort((a, b) => b.floorNumber - a.floorNumber);
+
+    // 連番で接続
+    for (let i = 0; i < splitterFloors.length - 1; i++) {
+      connections.push({
+        from: splitterFloors[i],
+        to: splitterFloors[i + 1],
+      });
+    }
+
+    return connections;
+  };
+
   return (
     <div>
       {/* フォーム */}
@@ -194,6 +213,27 @@ export default function FloorCanvas() {
                 strokeWidth={1}
               />
             ))}
+          </Layer>
+
+          {/* 接続線用のLayer */}
+          <Layer>
+            {getSplitterConnections().map((connection, index) => {
+              const fromCenterX = connection.from.x + connection.from.width / 2;
+              const fromCenterY =
+                connection.from.y + connection.from.height / 2;
+              const toCenterX = connection.to.x + connection.to.width / 2;
+              const toCenterY = connection.to.y + connection.to.height / 2;
+
+              return (
+                <Line
+                  key={`connection-${connection.from.id}-${connection.to.id}`}
+                  points={[fromCenterX, fromCenterY, toCenterX, toCenterY]}
+                  stroke="#0066cc"
+                  strokeWidth={1}
+                  //dash={[5, 5]}
+                />
+              );
+            })}
           </Layer>
 
           {/* 階層パネル用のLayer */}
