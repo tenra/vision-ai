@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import StaticMapGenerator from "./StaticMapGenerator";
 
 interface MapLocation {
   lat: number;
@@ -30,6 +31,8 @@ export default function MapsStatic() {
     lng: 139.7454,
     name: "東京タワー",
   });
+  const [currentZoom, setCurrentZoom] = useState<number>(18);
+  const mapRef = useRef<google.maps.Map | null>(null);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -44,6 +47,16 @@ export default function MapsStatic() {
         name: "クリックした位置",
       };
       setCurrentLocation(location);
+    }
+  }, []);
+
+  const onLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
+  }, []);
+
+  const onZoomChanged = useCallback(() => {
+    if (mapRef.current) {
+      setCurrentZoom(mapRef.current.getZoom() || 18);
     }
   }, []);
 
@@ -100,6 +113,8 @@ export default function MapsStatic() {
               center={{ lat: currentLocation.lat, lng: currentLocation.lng }}
               zoom={18}
               onClick={onMapClick}
+              onLoad={onLoad}
+              onZoomChanged={onZoomChanged}
             >
               {/* 現在のピン */}
               <Marker
@@ -114,19 +129,11 @@ export default function MapsStatic() {
           </div>
 
           {/* 座標情報 */}
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* 選択された位置 */}
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <h3 className="text-blue-800 font-medium mb-2">選択された位置</h3>
-              <div className="text-sm text-blue-700">
-                <p>
-                  <strong>緯度:</strong> {currentLocation.lat.toFixed(6)}
-                </p>
-                <p>
-                  <strong>経度:</strong> {currentLocation.lng.toFixed(6)}
-                </p>
-              </div>
-            </div>
+          <div className="mt-6">
+            <StaticMapGenerator
+              currentLocation={currentLocation}
+              currentZoom={currentZoom}
+            />
           </div>
         </div>
       </div>
