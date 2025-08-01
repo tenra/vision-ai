@@ -155,20 +155,25 @@ export default function FloorCanvas() {
 
   // hasSplitterがtrueのフロアを抽出して接続線を生成
   const getSplitterConnections = (): Connection[] => {
-    const splitterFloors = floors.filter((floor) => floor.hasSplitter);
+    // すべてのフロアを取得（hasSplitterに関係なく）
+    const allFloors = floors;
     const connections: Connection[] = [];
+
     // 階数順にソート（降順）
-    splitterFloors.sort((a, b) => b.floorNumber - a.floorNumber);
+    allFloors.sort((a, b) => b.floorNumber - a.floorNumber);
+
     // 連番で接続
-    for (let i = 0; i < splitterFloors.length - 1; i++) {
-      const from = splitterFloors[i];
-      const to = splitterFloors[i + 1];
+    for (let i = 0; i < allFloors.length - 1; i++) {
+      const from = allFloors[i];
+      const to = allFloors[i + 1];
+
       connections.push({
         from,
         to,
         path: generateOrthogonalPath(from, to),
       });
     }
+
     return connections;
   };
 
