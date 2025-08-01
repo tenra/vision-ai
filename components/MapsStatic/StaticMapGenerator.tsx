@@ -71,9 +71,6 @@ export default function StaticMapGenerator({
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <img src={staticMapUrl} alt="静的地図" className="w-full h-auto" />
           </div>
-          <div className="mt-2 text-xs text-green-700">
-            <p>Google Maps Static APIで生成された画像</p>
-          </div>
         </div>
       )}
     </>

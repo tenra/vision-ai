@@ -102,6 +102,9 @@ export default function MapsStatic() {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             静的マップ作成デモ
           </h1>
+          <div className="mt-6 text-gray-500">
+            <p>Google Maps Static APIで緯度経度に基づいた静的画像を生成します。</p>
+          </div>
         </div>
 
         {/* メインコンテンツ */}
