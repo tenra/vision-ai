@@ -29,7 +29,8 @@ export default function StaticMapGenerator({
         return;
       }
 
-      const staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${currentLocation.lat},${currentLocation.lng}&zoom=${currentZoom}&size=600x400&key=${apiKey}`;
+      // 高画質な静的地図を生成するためのパラメータ
+      const staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${currentLocation.lat},${currentLocation.lng}&zoom=${currentZoom}&size=1200x800&scale=2&maptype=roadmap&key=${apiKey}`;
       setStaticMapUrl(staticMapUrl);
     } catch (error) {
       console.error("静的地図の生成に失敗しました:", error);

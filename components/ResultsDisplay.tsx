@@ -32,41 +32,19 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
     );
   }
 
-  const hasLabels = result.labels.length > 0;
-  const hasObjects = result.objects.length > 0;
-  const hasTexts = result.texts.length > 0;
-
-  if (!hasLabels && !hasObjects && !hasTexts) {
-    return (
-      <div className="w-full mx-auto mt-6">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <div className="flex items-center">
-            <div className="text-yellow-500 text-xl mr-2">🔍</div>
-            <div>
-              <h3 className="text-yellow-800 font-medium">認識結果なし</h3>
-              <p className="text-yellow-600 text-sm mt-1">
-                画像からラベル、オブジェクト、テキストを認識できませんでした。別の画像をお試しください。
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full mx-auto mt-6 space-y-6">
       {/* オブジェクト検出結果 */}
-      {hasObjects && (
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">
-              検出されたオブジェクト ({result.objects.length}件)
-            </h3>
-            <p className="text-sm text-gray-500 mt-1">
-              画像内のオブジェクトとその位置
-            </p>
-          </div>
+      <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h3 className="text-lg font-medium text-gray-900">
+            検出されたオブジェクト ({result.objects.length}件)
+          </h3>
+          <p className="text-sm text-gray-500 mt-1">
+            画像内のオブジェクトとその位置
+          </p>
+        </div>
+        {result.objects.length > 0 ? (
           <div className="divide-y divide-gray-200">
             {result.objects.map((obj: VisionObject, index: number) => (
               <div key={index} className="px-6 py-4">
@@ -91,18 +69,24 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
               </div>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="px-6 py-4">
+            <p className="text-sm text-gray-500">
+              オブジェクトは検出されませんでした
+            </p>
+          </div>
+        )}
+      </div>
 
       {/* テキスト検出結果 */}
-      {hasTexts && (
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">
-              検出されたテキスト ({result.texts.length}件)
-            </h3>
-            <p className="text-sm text-gray-500 mt-1">画像内のテキスト内容</p>
-          </div>
+      <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h3 className="text-lg font-medium text-gray-900">
+            検出されたテキスト ({result.texts.length}件)
+          </h3>
+          <p className="text-sm text-gray-500 mt-1">画像内のテキスト内容</p>
+        </div>
+        {result.texts.length > 0 ? (
           <div className="divide-y divide-gray-200">
             {result.texts.map((text: VisionText, index: number) => (
               <div key={index} className="px-6 py-4">
@@ -127,20 +111,26 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
               </div>
             ))}
           </div>
-        </div>
-      )}
-
-      {/* ラベル検出結果 */}
-      {hasLabels && (
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">
-              認識されたラベル ({result.labels.length}件)
-            </h3>
-            <p className="text-sm text-gray-500 mt-1">
-              信頼度の高い順に表示されています
+        ) : (
+          <div className="px-6 py-4">
+            <p className="text-sm text-gray-500">
+              テキストは検出されませんでした
             </p>
           </div>
+        )}
+      </div>
+
+      {/* ラベル検出結果 */}
+      <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h3 className="text-lg font-medium text-gray-900">
+            認識されたラベル ({result.labels.length}件)
+          </h3>
+          <p className="text-sm text-gray-500 mt-1">
+            信頼度の高い順に表示されています
+          </p>
+        </div>
+        {result.labels.length > 0 ? (
           <div className="divide-y divide-gray-200">
             {result.labels.map((label: VisionLabel, index: number) => (
               <div key={index} className="px-6 py-4">
@@ -165,8 +155,14 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
               </div>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="px-6 py-4">
+            <p className="text-sm text-gray-500">
+              ラベルは認識されませんでした
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
