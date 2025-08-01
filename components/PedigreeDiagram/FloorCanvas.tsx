@@ -13,6 +13,7 @@ interface FloorData {
   height: number;
   floorNumber: number;
   hasSplitter: boolean;
+  hasBooster: boolean;
 }
 
 interface Connection {
@@ -24,6 +25,7 @@ interface Connection {
 export default function FloorCanvas() {
   const [floorCount, setFloorCount] = useState<number>(10);
   const [hasSplitter, setHasSplitter] = useState<boolean>(true);
+  const [hasBooster, setHasBooster] = useState<boolean>(false);
   const [floors, setFloors] = useState<FloorData[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
@@ -66,6 +68,7 @@ export default function FloorCanvas() {
         height: 60,
         floorNumber: floor,
         hasSplitter: hasSplitter,
+        hasBooster: hasBooster,
       };
     });
 
@@ -221,6 +224,22 @@ export default function FloorCanvas() {
               2分配器
             </label>
           </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              id="hasBooster"
+              type="checkbox"
+              checked={hasBooster}
+              onChange={(e) => setHasBooster(e.target.checked)}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              htmlFor="hasBooster"
+              className="text-sm font-medium text-gray-700"
+            >
+              片方向ブースター
+            </label>
+          </div>
         </form>
       </div>
 
@@ -283,6 +302,7 @@ export default function FloorCanvas() {
                 height={floor.height}
                 floorNumber={floor.floorNumber}
                 hasSplitter={floor.hasSplitter}
+                hasBooster={floor.hasBooster}
                 draggable={true}
                 onDragEnd={(e) => handleDragEnd(e, floor.id)}
                 onTransformEnd={(e) => handleTransformEnd(e, floor.id)}

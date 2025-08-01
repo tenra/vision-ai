@@ -1,6 +1,6 @@
 "use client";
 
-import { Group, Rect, Text } from "react-konva";
+import { Group, Rect, Text, Path } from "react-konva";
 import Konva from "konva";
 
 interface FloorPanelProps {
@@ -10,6 +10,7 @@ interface FloorPanelProps {
   height: number;
   floorNumber: number;
   hasSplitter?: boolean;
+  hasBooster?: boolean;
   draggable?: boolean;
   onDragEnd?: (e: Konva.KonvaEventObject<DragEvent>) => void;
   onTransformEnd?: (e: Konva.KonvaEventObject<Event>) => void;
@@ -23,6 +24,7 @@ export default function FloorPanel({
   height,
   floorNumber,
   hasSplitter = false,
+  hasBooster = false,
   draggable = false,
   onDragEnd,
   onTransformEnd,
@@ -62,11 +64,23 @@ export default function FloorPanel({
         fontWeight="bold"
       />
 
+      {/* 片方向ブースター（下向き三角形） */}
+      {hasBooster && (
+        <Path
+          data="M 0 8 L -6 -8 L 6 -8 Z"
+          x={width / 2}
+          y={height / 2 - 15}
+          //fill="#0066cc"
+          stroke="#0066cc"
+          strokeWidth={1}
+        />
+      )}
+
       {/* 2分配器表示 */}
       {hasSplitter && (
         <Text
           x={width / 2 - 8}
-          y={height / 2 - 8}
+          y={height / 2 + 5}
           text="②"
           fontSize={16}
           fontFamily="Arial"
